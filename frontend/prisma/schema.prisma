@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model User {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  email         String   @unique
+  password_hash String
+  role          String   // 'student' or 'parent'
+  created_at    DateTime @default(now()) @db.Timestamptz()
+
+  studentProfile StudentProfile?
+  parentProfile  ParentProfile?
+
+  // Relations where this user is the parent
+  parentRelations ParentChildRelation[] @relation("ParentUser")
+  // Relations where this user is the student
+  studentRelations ParentChildRelation[] @relation("StudentUser")
+
+  inviteCodes   InviteCode[]
+  conversations Conversation[]
+  careerRecs    CareerRecommendation[]
+  progress      Progress[]
+
+  @@map("users")
+}
+
+model StudentProfile {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id         String   @unique @db.Uuid
+  age             Int?
+  class_level     String?
+  city            String?
+  interests       String[]
+  skills          String[]
+  personality     String?
+  risk_level      String?
+  parent_pressure String?
+  budget_level    String?
+  confusion       String?
+  created_at      DateTime @default(now()) @db.Timestamptz()
+  updated_at      DateTime @default(now()) @db.Timestamptz()
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("student_profiles")
+}
+
+model ParentProfile {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      String   @unique @db.Uuid
+  expectations String?
+  concerns     String?
+  budget       String?
+  created_at   DateTime @default(now()) @db.Timestamptz()
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("parent_profiles")
+}
+
+model ParentChildRelation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parent_id  String   @db.Uuid
+  student_id String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz()
+
+  parent  User @relation("ParentUser", fields: [parent_id], references: [id], onDelete: Cascade)
+  student User @relation("StudentUser", fields: [student_id], references: [id], onDelete: Cascade)
+
+  @@unique([parent_id, student_id])
+  @@map("parent_child_relations")
+}
+
+model InviteCode {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code       String   @unique
+  created_by String   @db.Uuid
+  role       String   // 'student' or 'parent'
+  is_used    Boolean  @default(false)
+  expires_at DateTime @db.Timestamptz()
+  created_at DateTime @default(now()) @db.Timestamptz()
+
+  creator User @relation(fields: [created_by], references: [id], onDelete: Cascade)
+
+  @@map("invite_codes")
+}
+
+model Conversation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String   @db.Uuid
+  title      String?  @default("New Conversation")
+  created_at DateTime @default(now()) @db.Timestamptz()
+
+  user     User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id String   @db.Uuid
+  sender          String   // 'user' or 'ai'
+  message         String
+  metadata        Json?    @default("{}")
+  created_at      DateTime @default(now()) @db.Timestamptz()
+
+  conversation Conversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+
+  @@index([created_at(sort: Desc)])
+  @@map("messages")
+}
+
+model CareerRecommendation {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String   @db.Uuid
+  careers    Json     @default("[]")
+  created_at DateTime @default(now()) @db.Timestamptz()
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("career_recommendations")
+}
+
+model Progress {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @db.Uuid
+  goal       String
+  status     String    @default("pending") // 'pending', 'in_progress', 'completed'
+  deadline   DateTime? @db.Date
+  created_at DateTime  @default(now()) @db.Timestamptz()
+  updated_at DateTime  @default(now()) @db.Timestamptz()
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("progress")
+}
