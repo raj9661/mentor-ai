@@ -33,9 +33,10 @@ app.add_middleware(
     allow_origins=[
         settings.FRONTEND_URL,
         "http://localhost:3000",
-        "https://mentor-ai.vercel.app",  # Add your specific Vercel URL
-        "https://mentor-ai-raj9661s-projects.vercel.app", # Potential auto-url
+        "https://mentor-ai.vercel.app",
+        "https://mentor-ai-raj9661s-projects.vercel.app",
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
