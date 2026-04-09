@@ -27,67 +27,107 @@ const parentNav: NavItem[] = [
   { href: "/dashboard/parent/invite", icon: "🔗", label: "Link Child" },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const nav = user?.role === "parent" ? parentNav : studentNav;
 
   return (
-    <aside
-      style={{
-        width: "240px",
-        minWidth: "240px",
-        height: "100vh",
-        background: "var(--bg-secondary)",
-        borderRight: "1px solid var(--border)",
-        display: "flex",
-        flexDirection: "column",
-        padding: "0",
-        position: "sticky",
-        top: 0,
-        overflow: "hidden",
-      }}
-    >
-      {/* Logo */}
-      <div
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div className="drawer-overlay mobile-only" onClick={onClose} />
+      )}
+
+      <aside
+        className={`${isOpen ? "drawer" : "desktop-only"}`}
         style={{
-          padding: "20px 20px 16px",
-          borderBottom: "1px solid var(--border)",
+          width: "260px",
+          minWidth: "260px",
+          height: "100vh",
+          background: "var(--bg-secondary)",
+          borderRight: "1px solid var(--border)",
           display: "flex",
-          alignItems: "center",
-          gap: "10px",
+          flexDirection: "column",
+          padding: "0",
+          position: isOpen ? "fixed" : "sticky",
+          top: 0,
+          zIndex: 100,
+          overflow: "hidden",
+          boxShadow: isOpen ? "20px 0 50px rgba(0,0,0,0.5)" : "none",
         }}
       >
+        {/* Logo & Close Button */}
         <div
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: "10px",
-            background: "var(--gradient-brand)",
+            padding: "20px 20px 16px",
+            borderBottom: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            fontSize: "18px",
-            flexShrink: 0,
+            justifyContent: "space-between",
+            gap: "10px",
           }}
         >
-          🎓
-        </div>
-        <div>
-          <div
-            className="gradient-text"
-            style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "16px", fontWeight: 700 }}
-          >
-            MentorAI
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "10px",
+                background: "var(--gradient-brand)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                flexShrink: 0,
+              }}
+            >
+              🎓
+            </div>
+            <div>
+              <div
+                className="gradient-text"
+                style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "16px", fontWeight: 700 }}
+              >
+                MentorAI
+              </div>
+              <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "1px" }}>
+                {user?.role === "parent" ? "Parent Portal" : "Student Portal"}
+              </div>
+            </div>
           </div>
-          <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "1px" }}>
-            {user?.role === "parent" ? "Parent Portal" : "Student Portal"}
-          </div>
-        </div>
-      </div>
 
-      {/* Nav */}
-      <nav style={{ flex: 1, padding: "16px 12px", display: "flex", flexDirection: "column", gap: "4px", overflowY: "auto" }}>
+          {/* Mobile Close Button */}
+          {isOpen && (
+            <button
+              onClick={onClose}
+              className="mobile-only"
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--text-secondary)",
+                fontSize: "20px",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Nav */}
+        <nav
+          style={{ flex: 1, padding: "16px 12px", display: "flex", flexDirection: "column", gap: "4px", overflowY: "auto" }}
+          onClick={() => {
+            if (isOpen && onClose) onClose();
+          }}
+        >
         {nav.map((item) => {
           const isActive =
             item.href === pathname ||
@@ -164,5 +204,6 @@ export default function Sidebar() {
         </button>
       </div>
     </aside>
+    </>
   );
 }

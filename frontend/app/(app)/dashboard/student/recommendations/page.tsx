@@ -52,16 +52,16 @@ export default function RecommendationsPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: "32px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+      <div style={{ marginBottom: "32px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>
+          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "clamp(24px, 5vw, 28px)", fontWeight: 700, marginBottom: "8px" }}>
             Your Recommended Paths 🎯
           </h1>
           <p style={{ color: "var(--text-secondary)" }}>
             Based on our conversation, here are the top 3 careers tailored for you.
           </p>
         </div>
-        <div style={{ fontSize: "12px", color: "var(--text-muted)", padding: "6px 12px", background: "var(--bg-secondary)", borderRadius: "100px", border: "1px solid var(--border)" }}>
+        <div style={{ fontSize: "12px", color: "var(--text-muted)", padding: "6px 12px", background: "var(--bg-secondary)", borderRadius: "100px", border: "1px solid var(--border)", width: "fit-content" }}>
           Updated: {new Date(recs[0].created_at).toLocaleDateString()}
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function RecommendationsPage() {
               {career.title}
             </h2>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px", position: "relative", zIndex: 1 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: "24px", position: "relative", zIndex: 1 }}>
               {/* Left Column */}
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 <div>

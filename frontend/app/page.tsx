@@ -45,6 +45,7 @@ const steps = [
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,8 +62,8 @@ export default function LandingPage() {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 50,
-          padding: "0 24px",
+          zIndex: 90,
+          padding: "0 var(--container-px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -96,7 +97,9 @@ export default function LandingPage() {
             MentorAI
           </span>
         </div>
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+
+        {/* Desktop Nav */}
+        <div className="desktop-only" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <Link href="/login" className="btn btn-ghost" style={{ fontSize: "14px" }}>
             Sign In
           </Link>
@@ -104,14 +107,67 @@ export default function LandingPage() {
             Get Started Free
           </Link>
         </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className="mobile-only"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            color: "var(--text-primary)",
+            fontSize: "24px",
+            cursor: "pointer",
+          }}
+        >
+          {isMobileMenuOpen ? "✕" : "☰"}
+        </button>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="mobile-only"
+            style={{
+              position: "fixed",
+              top: "64px",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "var(--bg-primary)",
+              zIndex: 100,
+              padding: "40px 20px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              animation: "fadeIn 0.2s ease forwards",
+            }}
+          >
+            <Link
+              href="/login"
+              className="btn btn-secondary"
+              style={{ width: "100%", padding: "16px" }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className="btn btn-primary"
+              style={{ width: "100%", padding: "16px" }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Get Started Free
+            </Link>
+          </div>
+        )}
       </nav>
 
       {/* ── HERO ─────────────────────────────────────── */}
       <section
         ref={heroRef}
         style={{
-          paddingTop: "140px",
-          paddingBottom: "100px",
+          paddingTop: "clamp(100px, 15vh, 180px)",
+          paddingBottom: "var(--section-py)",
           textAlign: "center",
           position: "relative",
           overflow: "hidden",
@@ -143,7 +199,7 @@ export default function LandingPage() {
           }}
         />
 
-        <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto", padding: "0 24px" }}>
+        <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto", padding: "0 var(--container-px)" }}>
           <div
             className="badge badge-purple animate-fade-in"
             style={{ marginBottom: "24px", fontSize: "13px", padding: "6px 14px" }}
@@ -211,7 +267,7 @@ export default function LandingPage() {
           style={{
             maxWidth: "700px",
             margin: "60px auto 0",
-            padding: "0 24px",
+            padding: "0 var(--container-px)",
             animationDelay: "0.4s",
           }}
         >
@@ -309,7 +365,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── HOW IT WORKS ─────────────────────────────── */}
-      <section style={{ padding: "80px 24px", maxWidth: "1100px", margin: "0 auto" }}>
+      <section style={{ padding: "var(--section-py) var(--container-px)", maxWidth: "1100px", margin: "0 auto" }}>
         <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "36px", fontWeight: 700, textAlign: "center", marginBottom: "12px" }}>
           How It <span className="gradient-text">Works</span>
         </h2>
@@ -339,7 +395,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES ─────────────────────────────────── */}
-      <section style={{ padding: "60px 24px 80px", maxWidth: "1100px", margin: "0 auto" }}>
+      <section style={{ padding: "var(--section-py) var(--container-px)", maxWidth: "1100px", margin: "0 auto" }}>
         <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: "36px", fontWeight: 700, textAlign: "center", marginBottom: "12px" }}>
           Everything You <span className="gradient-text">Need</span>
         </h2>
@@ -364,12 +420,12 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────── */}
-      <section style={{ padding: "80px 24px 100px", textAlign: "center" }}>
+      <section style={{ padding: "var(--section-py) var(--container-px)", textAlign: "center" }}>
         <div
           style={{
             maxWidth: "600px",
             margin: "0 auto",
-            padding: "60px 40px",
+            padding: "var(--container-px)",
             background: "linear-gradient(135deg, rgba(108,99,255,0.1), rgba(6,182,212,0.06))",
             border: "1px solid rgba(108,99,255,0.2)",
             borderRadius: "24px",

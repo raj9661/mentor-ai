@@ -118,14 +118,14 @@ export default function ChatPage() {
   }
 
   return (
-    <div style={{ height: "calc(100vh - 64px)", display: "flex", gap: "24px" }}>
+    <div style={{ minHeight: "calc(100vh - 120px)", display: "flex", flexDirection: "row", gap: "24px", flexWrap: "wrap" }}>
       {/* Sidebar List */}
-      <div className="card" style={{ width: "260px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div className="card" style={{ width: "100%", maxWidth: "260px", display: "flex", flexDirection: "column", overflow: "hidden", height: "fit-content", flexBasis: "260px", flexGrow: 1 }}>
         <div style={{ padding: "16px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <h2 style={{ fontSize: "16px", fontWeight: 600 }}>Conversations</h2>
           <button onClick={startNewChat} className="btn btn-ghost" style={{ padding: "4px 8px" }}>➕</button>
         </div>
-        <div style={{ flex: 1, overflowY: "auto", padding: "12px" }}>
+        <div style={{ flex: 1, maxHeight: "300px", overflowY: "auto", padding: "12px" }}>
           {conversations.map(c => (
             <div
               key={c.id}
@@ -148,9 +148,9 @@ export default function ChatPage() {
           ))}
         </div>
       </div>
-
+ 
       {/* Chat Area */}
-      <div className="card" style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div className="card" style={{ flex: "1 1 400px", minWidth: 0, display: "flex", flexDirection: "column", overflow: "hidden", height: "600px" }}>
         {/* Header */}
         <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
